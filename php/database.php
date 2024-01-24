@@ -1,9 +1,9 @@
 <?php
 class Database{
   private $hostname="localhost:3306";
-  private $database="db_pankey";
-  private $username="anthonyluisluna225";
-  private $password="anthonyluisluna225";
+  private $database="2db_pankey";
+  private $username="root";
+  private $password="";
   private $charset="utf8";
 
  

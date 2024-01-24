@@ -1,9 +1,9 @@
 <?php
 $enlace = "";
 $host = "localhost";
-$user = "anthonyluisluna225";
-$pass = "anthonyluisluna225";
-$dbname = "db_pankey";
+$user = "root";
+$pass = "";
+$dbname = "2db_pankey";
 $target_path = "../imagenes/Productos/";
 $conn = mysqli_connect($host, $user, $pass, $dbname);
 if (!$conn) {

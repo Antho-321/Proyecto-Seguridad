@@ -1,9 +1,9 @@
 <?php
 class Conexion {
     private $host = "localhost";
-    private $user = "anthonyluisluna225";
-    private $password = "anthonyluisluna225";
-    private $name_db ="db_pankey";
+    private $user = "root";
+    private $password = "";
+    private $name_db ="2db_pankey";
     private $conn;
 
     public function __construct() {

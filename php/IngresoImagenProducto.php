@@ -3,9 +3,9 @@ header("Access-Control-Allow-Origin: *");
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 $host = "localhost";
-$user = "anthonyluisluna225";
-$pass = "anthonyluisluna225";
-$dbname = "db_pankey";
+$user = "root";
+$pass = "";
+$dbname = "2db_pankey";
 $conn = mysqli_connect($host, $user, $pass, $dbname);
 $target_path = "../imagenes/Productos/";
 if (!$conn) {

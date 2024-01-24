@@ -1,7 +1,7 @@
 <?php
 session_start();
 // Conexión a la base de datos
-$conn = mysqli_connect('localhost', 'anthonyluisluna225', 'anthonyluisluna225', 'db_pankey');
+$conn = mysqli_connect('localhost', 'root', '', '2db_pankey');
 // Verificar conexión
 if (!$conn) {
   die("Conexión fallida: " . mysqli_connect_error());

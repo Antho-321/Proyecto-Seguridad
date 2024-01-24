@@ -15,9 +15,9 @@ if (isset($_SESSION['id'])) {
         // Configuración de la conexión a la base de datos
         $enlace = "";
         $host = "localhost";
-        $user = "anthonyluisluna225";
-        $pass = "anthonyluisluna225";
-        $dbname = "db_pankey";
+        $user = "root";
+        $pass = "";
+        $dbname = "2db_pankey";
 
         // Crear una nueva conexión PDO
         $pdo = new PDO("mysql:host=$host;dbname=$dbname", $user, $pass);
