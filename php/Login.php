@@ -23,7 +23,15 @@ if ($email != null) {
         if($random == $comparacion){
             //Login correcto
         $_SESSION['id'] = $Id['id_cliente'];
-        echo '<script>window.location = "../vistas/index.php";</script>';
+            $para = $correo;
+            $asunto = "Nuevo Inicio de Sesión Detectado en Pankey";
+            $cuerpo = "Confirmación de ingreso de dispositivo";
+            $texto1 = "Confirmación de ingreso en Pankey";
+            $texto2 = "Hemos detectado un nuevo inicio de sesión en tu cuenta de Pankey. Queremos asegurarnos de que hayas sido tú quien ha accedido a su cuenta.";
+            $texto3 = "Si reconoces esta actividad, no es necesario que hagas nada. Solo queríamos mantenerte informado. Si NO reconoces este inicio de sesión, te recomendamos cambiar tu contraseña de inmediato para proteger tu cuenta. Recuerda: nunca compartas tu contraseña con nadie y asegúrate de que sea única y segura.";
+            $salida = shell_exec('node ../script/envio_correo.js "' . $para . '" "' . $asunto . '" "' . $cuerpo . '" "' . $texto1 . '" "' . $texto2 . '" "' . $texto3 . '" "' . '"');
+        
+            echo '<script>window.location = "../vistas/index.php";</script>';
         }else{
             $conexion->closeConnection();
             echo '<script>
