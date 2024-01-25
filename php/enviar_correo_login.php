@@ -156,7 +156,7 @@ if (isset($existe)) {
                 </div>
                 <footer>
                     <div id="Derechos">
-                        © 2023 Web Personal. Creado por Tito Córdova, De la Cruz Brayan, Luna Anthony
+                        © 2023 Web Personal. 
                     </div>
                 </footer>
             </body>
@@ -282,7 +282,7 @@ if (isset($existe)) {
 
             <footer>
                 <div id="Derechos">
-                    © 2023 Web Personal. Creado por Tito Córdova, De la Cruz Brayan, Luna Anthony
+                    © 2023 Web Personal. 
                 </div>
             </footer>
             </div>

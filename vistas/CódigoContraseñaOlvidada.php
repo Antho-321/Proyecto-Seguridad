@@ -71,7 +71,7 @@
     </div>
     <footer>
         <div id="Derechos">
-            © 2023 Pagina Web. Creado por Tito Córdova, De la Cruz Brayan, Luna Anthony
+            © 2023 Pagina Web. .
         </div>
     </footer>
 </body>
