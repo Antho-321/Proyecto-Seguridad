@@ -3,7 +3,7 @@ class Conexion {
     private $host = "localhost";
     private $user = "root";
     private $password = "";
-    private $name_db ="2db_pankey";
+    private $name_db ="db_pankey";
     private $conn;
 
     public function __construct() {

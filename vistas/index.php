@@ -14,7 +14,7 @@ if (isset($_SESSION['id'])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/styles/estilo_Modificación_Index.css" id="estilo">
+    <link rel="stylesheet" type="text/css" href="../styles/estilo_Modificación_Index.css" id="estilo">
     <link rel="shortcut icon" href="../favicon.ico">
     <title>Pankey</title>
 </head>
@@ -88,7 +88,7 @@ if (isset($_SESSION['id'])) {
 
     <footer>
         <div id="Derechos">
-            © 2023 Web Personal. Creado por Tito Córdova, De la Cruz Brayan, Luna Anthony
+            © 2023 Web Personal. 
         </div>
     </footer>
     </div>
