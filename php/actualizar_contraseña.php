@@ -17,7 +17,7 @@ if ($contraseña != $Rep_contraseña) {
     $conexion->closeConnection();
     echo '<script>
     window.alert("Contraseña actualizada, por favor inicie sesión"); 
-    window.location = "../vistas/index.php";
     </script>';
+    header("Location: ../php/Logout.php");
 }
 ?> 
