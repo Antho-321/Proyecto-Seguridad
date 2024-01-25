@@ -22,7 +22,7 @@ if ($email != null) {
     if ($email['email'] == $correo && password_verify($contraseña, $pass['password'])) {
         if($random == $comparacion){
             //Login correcto
-        $_SESSION['id'] = $Id['id_cliente'];
+            $_SESSION['id'] = $Id['id_cliente'];
             $para = $correo;
             $asunto = "Nuevo Inicio de Sesión Detectado en Pankey";
             $cuerpo = "Confirmación de ingreso de dispositivo";
