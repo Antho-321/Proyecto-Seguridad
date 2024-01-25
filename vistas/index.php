@@ -60,6 +60,11 @@ if (isset($_SESSION['id'])) {
                         <input type="button" value="Ingresar" id="Ingreso" onclick="MostrarVentanaDeIngreso()">
                     <?php } else { ?>
                         <button onclick="Logout()" id="Salida"><a>Salir</button>
+                        <form action="../vistas/actualizaciónContraseña.php" method="POST">
+                            <button id="Salida"><a>Cambiar de contraseña</button>
+                            <input type="hidden" name="desde_index" value="true">
+                        </form>
+                        
                     <?php } ?>
                 </section>
                 <label for="check" class="esconder_menu">
