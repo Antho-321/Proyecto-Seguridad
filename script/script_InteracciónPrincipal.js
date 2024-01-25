@@ -191,7 +191,7 @@ if (ubicación_página.substring(ubicación_página.lastIndexOf("/")) == "/Carri
             let aux_currentDate = new Date();
             aux_currentDate.setHours(0, 0, 0, 0);
             aux_currentDate.setDate(aux_currentDate.getDate() + 1);
-            
+
             if (inputDate.getTime() == aux_currentDate.getTime()) {
                 dia_mañana = true;
             } else {
@@ -614,8 +614,8 @@ function ProductosNoIngresados() {
 function finalizarPedido() {
     // MostrarMensaje("Por favor déjese de mamadas");
     if (fecha_valida == true && hora_valida == true) {
-        fecha_entrega.disabled=true;
-        hora_entrega.disabled=true;
+        fecha_entrega.disabled = true;
+        hora_entrega.disabled = true;
         let tabla_info = document.getElementsByClassName("tabla_info")[1];
         let scripts = document.getElementsByTagName("script");
         let script = document.createElement("script");
@@ -724,8 +724,9 @@ function MostrarVentanaDeRegistro() {
         <input type="password" id="rep_contraseña" name="Rep_contraseña" class="entrada_texto">
         <!------LA FUNCIÓN runQuery está en el archivo script_Registro.js------>
         <button id="registro">Registrarse</button>
-            <label for="RegresarAIngreso">¿Ya tienes una cuenta?</label>
-            <input type="button" value="Ingresar" id="RegresarAIngreso" onclick="MostrarVentanaDeIngreso()">
+        <label for="RegresarAIngreso">¿Ya tienes una cuenta?</label>
+        <input type="button" value="Ingresar" id="RegresarAIngreso" onclick="MostrarVentanaDeIngreso()">
+        <p><b>Importante: </b>La contraseña debe tener al menos una letra mayúscula, una letra minúscula, un número y un signo especial</p>
         <script src="../script/script_Registro.js"></script>
     </form>
 </div>
@@ -781,7 +782,7 @@ function AgregarContenidoCarrito() {
     let myData = myAsyncFunction3();
     myData.then(result => {
         var datos_carrito_string = JSON.stringify(result);
-        localStorage.setItem('datos_carrito',datos_carrito_string)
+        localStorage.setItem('datos_carrito', datos_carrito_string)
         if (result.usuario == "noIngresado" || result.length == 0) {
             ProductosNoIngresados();
         }
