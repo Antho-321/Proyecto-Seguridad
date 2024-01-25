@@ -1,3 +1,17 @@
+-- Drop tables in an order that respects foreign key constraints
+DROP TABLE IF EXISTS `canasta`;       -- Another child table
+DROP TABLE IF EXISTS `comprobante_venta`; -- And so on
+DROP TABLE IF EXISTS `pedido`;        -- Drop child tables first
+DROP TABLE IF EXISTS `roles`;
+DROP TABLE IF EXISTS `auditoria`;
+DROP TABLE IF EXISTS `cliente`;       -- Then drop parent tables
+DROP TABLE IF EXISTS `usuarios`;
+DROP TABLE IF EXISTS `pastel`;
+DROP TABLE IF EXISTS `operaciones`;
+DROP VIEW IF EXISTS `operaciones`;
+
+-- Continue with your existing script...
+
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
@@ -112,18 +126,10 @@ CREATE TABLE `cliente` (
   `cedula_cliente` varchar(10) DEFAULT NULL,
   `nombre_cliente` varchar(50) DEFAULT NULL,
   `direccion_domicilio` varchar(50) DEFAULT NULL,
-  `telefono_movil` varchar(10) DEFAULT NULL
+  `telefono_movil` varchar(10) DEFAULT NULL,  
+  `activo` boolean DEFAULT true,
+  `failed_attempts` INT DEFAULT 0 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `cliente`
---
-
-INSERT INTO `cliente` (`id_cliente`, `email`, `password`, `cedula_cliente`, `nombre_cliente`, `direccion_domicilio`, `telefono_movil`) VALUES
-(1, 'anthonyluisluna225@gmail.com', '$2y$10$iPy1sQUt0BSUunfaxUCX3OUPzVC2w/OqBV/4WOuNIwZwvFwdEtihW', NULL, NULL, NULL, NULL),
-(2, 'luchitolondra522@gmail.com', '$2y$10$TDckOQ6e4FKCqXsoIfZlIeBDoU3djB5LMbObpqqX5RdjtTOhfh08C', NULL, NULL, NULL, NULL),
-(3, 'johanapuerchambud07@gmail.com', '$2y$10$gcDg/cdwiHUoW4H9GtCc5eKKaKZIllSw7ae9wVeIKdFpdr97QxNbK', NULL, NULL, NULL, NULL),
-(4, 'mrpusda@gmail.com', '$2y$10$mMe4pKL94efewvtmdnSJIu2YixT5epo5FPfzJaKtnP2ZJ6y/eRbNi', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
