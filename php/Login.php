@@ -20,19 +20,25 @@ $connection->closeConnection();
 
 if ($email != null) {
     if ($email['email'] == $correo && password_verify($contraseña, $pass['password'])) {
-        if($random == $comparacion){
+        if ($random == $comparacion) {
             //Login correcto
-        $_SESSION['id'] = $Id['id_cliente'];
-        echo '<script>window.location = "../vistas/index.php";</script>';
-        }else{
+            $_SESSION['id'] = $Id['id_cliente'];
+            $para = $correo;
+            $asunto = "Nuevo Inicio de Sesión Detectado en Pankey";
+            $cuerpo = "Confirmación de ingreso de dispositivo";
+            $texto1 = "Confirmación de Inicio de Sesión en Pankey";
+            $texto2 = "Hemos detectado un nuevo inicio de sesión en tu cuenta de Pankey. Queremos asegurarnos de que haya sido usted quien ha accedido a su cuenta.";
+            $texto3 = "Si reconoce esta actividad, no es necesario que haga nada. Solo queríamos mantenerlo informado. Si NO reconoce este inicio de sesión, le recomendamos cambiar su contraseña de inmediato para proteger su cuenta. Recuerde: nunca comparta su contraseña con nadie y asegúrese de que sea única y segura.";
+            $salida = shell_exec('node ../script/envio_correo.js "' . $para . '" "' . $asunto . '" "' . $cuerpo . '" "' . $texto1 . '" "' . $texto2 . '" "' . $texto3 . '" "' . '"');
+
+            echo '<script>window.location = "../vistas/index.php";</script>';
+        } else {
             $conexion->closeConnection();
             echo '<script>
             window.alert("Codigos incorrectos"); 
             window.location = "../vistas/index.php";
             </script>';
         }
-
-        
     } else {
         echo '<script>
         window.alert("ERROR DE INGRESO: contraseña incorrecta"); 
