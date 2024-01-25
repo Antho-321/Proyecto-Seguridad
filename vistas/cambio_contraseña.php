@@ -204,7 +204,25 @@ $desde_index=$_SESSION['desde_index'];
                             <button id="registro">Guardar cambios</button>
                             <label for="RegresarAIngreso">¿Ya tienes una cuenta?</label>
                             <input type="button" value="Ingresar" id="RegresarAIngreso" onclick="MostrarVentanaDeIngreso()">
-                            <p><b>Importante: </b>La contraseña debe tener al menos una letra mayúscula, una letra minúscula, un número y un signo especial</p>
+                            <?php
+                            if (isset($_SESSION['contraseña_valida'])) {
+                                if ($_SESSION['contraseña_valida']==false) {
+                                    ?>
+                                        <p><b style="color: red; font-size: 21px">¡Contraseña no válida!</b>Recuerda: La contraseña debe tener al menos una letra mayúscula, una letra minúscula, un número y un signo especial</p>
+                                    <?php
+                                }else{
+                                    ?>
+    <p><b>Importante: </b>La contraseña debe tener al menos una letra mayúscula, una letra minúscula, un número y un signo especial</p>
+                                    <?php
+                                }
+                            } else{
+                                ?>
+    <p><b>Importante: </b>La contraseña debe tener al menos una letra mayúscula, una letra minúscula, un número y un signo especial</p>
+                                    <?php
+                            }
+                            
+                            ?>
+
                             <script src="../script/script_Registro.js"></script>
                         </form>
                     </div>
