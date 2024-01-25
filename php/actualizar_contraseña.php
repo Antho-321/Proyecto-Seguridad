@@ -51,8 +51,8 @@ if (validarContraseña($contraseña)) {
     $conexion->closeConnection();
     echo '<script>
     window.alert("Contraseña actualizada, por favor inicie sesión"); 
+    window.location = "../php/Logout.php";
     </script>';
-    header("Location: ../php/Logout.php");
 }else{
     $_SESSION['contraseña_valida']=false;
     header("Location: ../vistas/cambio_contraseña.php");
