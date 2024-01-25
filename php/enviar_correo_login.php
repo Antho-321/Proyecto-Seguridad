@@ -30,8 +30,8 @@ if (isset($existe)) {
                 <meta charset="UTF-8">
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <link rel="stylesheet" type="text/css" href="/styles/estilo_Modificación_Index.css" id="estilo">
-                <link rel="stylesheet" type="text/css" href="/styles/estilo_Envio_Correo.css">
+                <link rel="stylesheet" type="text/css" href="../styles/estilo_Modificación_Index.css" id="estilo">
+                <link rel="stylesheet" type="text/css" href="../styles/estilo_Envio_Correo.css">
                 <link rel="shortcut icon" href="../favicon.ico">
                 <title>Pankey</title>
                 <style id="est_ver_categorías">
