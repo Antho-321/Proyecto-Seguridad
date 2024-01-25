@@ -724,8 +724,9 @@ function MostrarVentanaDeRegistro() {
         <input type="password" id="rep_contraseña" name="Rep_contraseña" class="entrada_texto">
         <!------LA FUNCIÓN runQuery está en el archivo script_Registro.js------>
         <button id="registro">Registrarse</button>
-            <label for="RegresarAIngreso">¿Ya tienes una cuenta?</label>
-            <input type="button" value="Ingresar" id="RegresarAIngreso" onclick="MostrarVentanaDeIngreso()">
+        <label for="RegresarAIngreso">¿Ya tienes una cuenta?</label>
+        <input type="button" value="Ingresar" id="RegresarAIngreso" onclick="MostrarVentanaDeIngreso()">
+        <p><b>Importante: </b>La contraseña debe tener al menos una letra mayúscula, una letra minúscula, un número y un signo especial</p>
         <script src="../script/script_Registro.js"></script>
     </form>
 </div>
