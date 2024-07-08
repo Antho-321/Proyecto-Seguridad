@@ -98,7 +98,8 @@ if (isset($existe)) {
                                 <input type="email" id="correo" name="Correo" class="entrada_texto">
                                 <label for="contraseña">Contraseña:</label>
                                 <input type="password" id="contraseña" name="Contraseña" class="entrada_texto">
-                                <p style="color:red">Contraseña no válida, por favor intenta de nuevo</p>
+                                <p style="color:red">Contraseña no válida, por favor intenta de nuevo.</p>
+                                <p>Número de intentos restantes: <?php echo "".(3-$failedAttempts) ?></p>
                                 <div class="btnHaciaDerecha">
                                     <input type="button" id="contraseña_olvidada" value="¿Olvidaste tu contraseña?"
                                         onclick="MostrarVentanaRecuperación_Correo()">

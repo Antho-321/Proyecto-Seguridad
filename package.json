@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@zoon/puphpeteer": "github:zoonru/puphpeteer",
     "googleapis": "^111.0.0",
     "http2": "^3.3.7",
     "jsdom": "^23.0.1",

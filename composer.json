@@ -1,0 +1,5 @@
+{
+    "require-dev": {
+        "zoon/puphpeteer": "^1.6"
+    }
+}

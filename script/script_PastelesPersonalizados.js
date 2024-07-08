@@ -8,11 +8,15 @@ let formDrop1, formDrop2, formDrop3, formDrop4,
   seccion_sabor, seccion_relleno, seccion_forma,
   pregunta_mismo_tipo, pregunta_mismo_tamaño, pregunta_mismo_sabor, pregunta_mismo_relleno, pregunta_misma_cobertura, pregunta_imagenEspecífica,
   diferente_tamaño, diferente_forma, diferente_tipo,
-  misma_forma, mismo_tamaño,misma_cobertura,
+  misma_forma, mismo_tamaño, misma_cobertura,
   select_sabor, select_relleno,
   txtespAdicional, espAdicional3,
-  enlaceAdd, numImgEspAdd, tdEspAdd, formDropAdd, dropzoneAdd, childrenAdd;
-numImgEspAdic=2;
+  enlaceAdd, numImgEspAdd, tdEspAdd, formDropAdd, dropzoneAdd, childrenAdd,
+  mismo_relleno, forma, tamaño, tipo_pastel;
+forma="Redonda";
+tamaño="Mini (5-6 personas)";
+tipo_pastel="Normal (Con receta propia)";
+numImgEspAdic = 2;
 array_tipoPasteles = [];
 personalizacion = document.getElementById("personalizacion");
 ingreso_enlace1 = document.getElementById("enlace1");
@@ -49,6 +53,95 @@ document.addEventListener('DOMContentLoaded', function () { resetearDivElem(); r
 Dropzone.autoDiscover = false;
 formDrop1 = configurarDropZone(ingreso_enlace1, "");
 dropzone1 = new Dropzone("div#formDrop", formDrop1);
+
+function setupDropzoneEventHandling(dropzone) {
+  let dropZone = dropzone.element; // Adjust this line if necessary to correctly select your Dropzone container
+
+    // Prevent default drag behaviors
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+        document.body.addEventListener(eventName, preventDefaults, false);
+    });
+
+    // Highlight drop zone when item is dragged over it
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, unhighlight, false);
+    });
+
+    // Handle dropped files
+    dropZone.addEventListener('drop', handleDrop, false);
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    function highlight() {
+        dropZone.style.borderColor = 'green';
+    }
+
+    function unhighlight() {
+        dropZone.style.borderColor = '#0087F7';
+    }
+
+    function handleDrop(e) {
+        var dt = e.dataTransfer;
+        var files = dt.files;
+
+        if (files.length) {
+            // If file is dropped, we assume it's an image file
+            handleFiles(files);
+        } else {
+            // If no files, try to retrieve and display the image URL
+            var html = dt.getData('text/html');
+            var match = html && html.match(/src\s*=\s*"?(.+?)"?\s/);
+            var url = match && match[1];
+            if (url) {
+                displayImageFromUrl(url);
+            }
+        }
+    }
+
+    function handleFiles(files) {
+        for (var i = 0, len = files.length; i < len; i++) {
+            var file = files[i];
+            var reader = new FileReader();
+            
+            reader.onloadend = function(event) {
+                displayImage(event.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function displayImageFromUrl(url) {
+        var img = document.createElement('img');
+        //img.src = url;
+        let imageUrl = url;
+        var mockFile = { name: "Filename", size: 12345 };
+        dropzone1.emit("addedfile", mockFile);
+        dropzone1.emit("thumbnail", mockFile, imageUrl);
+        //dropzone1.emit("complete", mockFile);
+        dropzone1.files.push(mockFile);
+    }
+
+    function displayImage(src) {
+        var img = document.createElement('img');
+        //img.src = src;
+        let imageUrl = src;
+        var mockFile = { name: "Filename", size: 12345 };
+        //dropzone1.emit("addedfile", mockFile);
+        dropzone1.emit("thumbnail", mockFile, imageUrl);
+        //dropzone1.emit("complete", mockFile);
+        dropzone1.files.push(mockFile);
+    }
+}
+
+setupDropzoneEventHandling(dropzone1);
 ingreso_enlace1.addEventListener('input', () => {
   validaciónIngresoEnlace(ingreso_enlace1, dropzone1);
 });
@@ -67,17 +160,13 @@ function configurarDropZone(ingreso_enlace, imagenAdicional) {
   }
   return {
     url: "../php/IngresoImagenProducto.php" + imagenAdicional,
-    dictDefaultMessage: `<p id="txtDrop">Presiona aquí para subir tu imagen o ingresa su enlace:</p>
+    dictDefaultMessage: `<p id="txtDrop">Presiona aquí para subir tu imagen, arrástrala o ingresa su enlace:</p>
     <input type="url" placeholder="Ingresar enlace" id="input2" style="visibility: hidden">
     <div id="contenedorTxt">
       <p class="txtImgNoValida">Enlace no válido</p>
     <div>
     `,
     clickable: true,
-    drop: function(event) {
-      event.preventDefault();
-      event.stopPropagation();
-    },
     acceptedFiles: ".jpg,.jpeg,.png,.gif,.webp",
     maxFiles: 1,
     init: function () {
@@ -90,13 +179,12 @@ function configurarDropZone(ingreso_enlace, imagenAdicional) {
         document.head.appendChild(estilo_noMasImg);
       });
       this.on("addedfile", function (file) {
-        
         contenedor_preImg = file.previewElement.getElementsByClassName("dz-image")[0];
         dzSize = file.previewElement.getElementsByClassName("dz-size")[0];
         dzProgress = file.previewElement.getElementsByClassName("dz-progress")[0];
         previsualizacion = file.previewElement.getElementsByTagName("img")[0];
         contenedor_preImg.style = "width: 222px; height: 200px; z-index: 1;";
-        contenedor_preImg.parentNode.style = "width: 222px; height: 200px; margin: 0px !important; z-index: 1;";
+        contenedor_preImg.parentNode.style = "width: 222px; height: 200px; margin: 0px !important; z-index: 1; background: transparent !important;";
         contenedor_preImg.children[0].style = "width: 222px; height: 200px";
         document.head.appendChild(estilo_contenedorPreImg);
         previsualizacion.style = "width: 100%; height: 100%;";
@@ -108,8 +196,8 @@ function configurarDropZone(ingreso_enlace, imagenAdicional) {
             AgregarMásContenido();
           }
         }
-        
-        
+
+
       });
       this.on("success", function (_file, _response) {
         ingreso_enlace.style = "z-index: -1;";
@@ -122,18 +210,18 @@ function configurarDropZone(ingreso_enlace, imagenAdicional) {
           } else {
             document.getElementsByClassName("aux_IngresarEnlace")[0].value = file.name;
           }
-        }else{
+        } else {
           let myData = ultimaImgIngresada();
           myData.then(result => {
             //previsualizacion = file.previewElement.querySelector("img");
-            
+
             if (result.name != undefined) {
-             var nombres = Object.keys(result.name);
-             previsualizacion.src = "../imagenes/Productos/" + nombres[1];
-           }
-         });
+              var nombres = Object.keys(result.name);
+              previsualizacion.src = "../imagenes/Productos/" + nombres[1];
+            }
+          });
         }
-         
+
       });
     },
     renameFile: function (file) {
@@ -208,6 +296,7 @@ function validaciónIngresoEnlace(ingreso_enlace, dropzone) {
 function enlaceImgVálido(enlace, dropzone) {
   let file = { name: enlace };
   dropzone.emit("addedfile", file);
+  dropzone1.emit("thumbnail", file, enlace);
   elem_estImgNoValido = document.getElementById("est_txtImgNoValida");
   if (elem_estImgNoValido != undefined) {
     elem_estImgNoValido.remove();
@@ -329,9 +418,9 @@ function disminuirCantidadP() {
       diferenteTamaño(true, seleccionables);
     }
   }
-  if(cantidadInput.value>1){
+  if (cantidadInput.value > 1) {
     actualizarDesdeTipo();
-  } 
+  }
 }
 function aumentarCantidadP() {
   let str = "";
@@ -434,6 +523,7 @@ function aumentarCantidadP() {
     mismo_tamaño = document.getElementById("mismo_tamaño");
     misma_forma = document.getElementById("misma_forma");
     misma_cobertura = document.getElementById("misma_cobertura");
+    mismo_relleno = document.getElementById("mismo_relleno");
     diferente_tamaño = document.getElementById("diferente_tamaño");
     diferente_forma = document.getElementById("diferente_forma");
     diferente_tipo = document.getElementById("diferente_tipo");
@@ -577,7 +667,7 @@ function contenido_seccion_tamaño() {
                 <tr id="seccion_tamaño">
                   <th><p><b>Tamaño:</b></p></th>
                   <td>
-                    <select id="opciones_tamaño" name="tamaño">
+                    <select id="opciones_tamaño" name="tamaño" onchange="tamano(event)">
                       <option value="Mini (5-6 personas)">Mini (5-6 personas)</option>
                       <option value="Pequeña (10-12 personas)">Pequeña (10-12 personas)</option>
                       <option value="Mediana (16 personas)">Mediana (16 personas)</option>
@@ -1116,9 +1206,9 @@ function opcionSel(event) {
   }
   if (event.target.value.includes("modelo")) {
     removerDropsAdicionales();
-    if(!event.target.value.includes("adorno")){
+    if (!event.target.value.includes("adorno")) {
       seccionFigura(event);
-      document.getElementById("espAdicional").insertAdjacentHTML("beforebegin",`
+      document.getElementById("espAdicional").insertAdjacentHTML("beforebegin", `
     <tr>
     <th colspan="2" style="color: #C43E00">Tenga en cuenta que la pastelería no dispone del personal para realizar otro tipo de figuras</th>
   </tr>
@@ -1128,7 +1218,6 @@ function opcionSel(event) {
 }
 function tipoPasteles(event, sabor, num_select, retorno_vacio, ver_mismo_relleno, ver_mismo_sabor, difTipo, difForma) {
   let sabor_aux = sabor;
-  let tipo_pastel;
   if (sabor_aux == true) {
     if (typeof retorno_vacio == "boolean") {
       if (retorno_vacio) {
@@ -1179,13 +1268,6 @@ function tipoPasteles(event, sabor, num_select, retorno_vacio, ver_mismo_relleno
     if (seccion_sabor != undefined) {
       seccion_sabor.removeAttribute("style");
     }
-    if (tipo_pastel != "Mousse") {
-      sabor[1].value = "Chocolate";
-      sabor[1].innerHTML = "Chocolate";
-      sabor[3].style = "display:none";
-      sabor[4].style = "display:none";
-      sabor[5].style = "display:none";
-    }
   }
   if (seccion_relleno != undefined) {
     if (tipo_pastel == "Mousse" || tipo_pastel == "Tres leches" || tipo_pastel == "Cheesecake") {
@@ -1196,29 +1278,18 @@ function tipoPasteles(event, sabor, num_select, retorno_vacio, ver_mismo_relleno
   }
   switch (tipo_pastel) {
     case "Normal (Con receta propia)":
-    case "Normal (Con premezcla)":
     case "Especial (Con frutos secos)":
-      sabor[0].value = "Naranja";
-      sabor[0].innerHTML = "Naranja";
-      modificarSabor(sabor[2],"Naranja y chocolate (Marmoleada)");
-      modificarSabor(sabor[3],"Vainilla");
-      modificarSabor(sabor[4],"Maracuyá");
+      saboresDesdeHasta(sabor,5,9);
       break;
-    case "Bizcochuelo":
+    case "Bizcochuelo": 
+      saboresDesdeHasta(sabor,6,7);
+      break;
+    case "Normal (Con premezcla)":
+      saboresDesdeHasta(sabor,5,7);
+      break;
     case "Cheesecake":
-      sabor[0].value = "Vainilla";
-      sabor[0].innerHTML = "Vainilla";
-      sabor[2].style = "display: none";
-      break;
     case "Mousse":
-      sabor[0].value = "Fresa";
-      sabor[0].innerHTML = "Fresa";
-      sabor[1].value = "Naranja";
-      sabor[1].innerHTML = "Naranja";
-      modificarSabor(sabor[2],"Maracuyá");
-      modificarSabor(sabor[3],"Limón");
-      modificarSabor(sabor[4],"Uva");
-      modificarSabor(sabor[5],"Manzana");
+      saboresDesdeHasta(sabor,1,8);
       break;
     case "Milhojas":
     case "Tres leches":
@@ -1230,11 +1301,19 @@ function tipoPasteles(event, sabor, num_select, retorno_vacio, ver_mismo_relleno
   if (sabor_aux != true) {
     return sabor_aux;
   }
+  CambiarPrecio();
 }
-function modificarSabor(sabor, nombre_sabor){
-  sabor.value=nombre_sabor;
-  sabor.innerHTML=nombre_sabor;
-  sabor.removeAttribute("style");
+function saboresDesdeHasta(sabor, desde, hasta){
+  desde--;
+  hasta--;
+  sabor[desde].selected=true;
+  for (let i = 0; i < sabor.length; i++) {
+    if (i>=desde && i<=hasta) {
+      sabor[i].removeAttribute("style");
+    } else {
+      sabor[i].style="display: none";
+    }
+  }
 }
 function diferentesFormas(event) {
   let limite, num_aux, str_aux;
@@ -1272,13 +1351,26 @@ function diferentesFormas(event) {
     diferenteTamaño(true, seleccionables);
   }
 }
+function CambiarPrecio(){
+  // console.log("Forma: "+forma);
+  // console.log("Tamaño: "+tamaño);
+  // console.log("Tipo de pastel: "+tipo_pastel);
+  // console.log("");
+
+  // precio=document.getElementById("precio");
+  // precio.innerHTML="Precio: $X";
+}
+function tamano(event){
+  tamaño=event.target.value;
+  CambiarPrecio();
+}
 function tamañoSel(event) {
   let ingreso;
   if (typeof event == "string") {
     ingreso = event;
   } else {
     ingreso = event.target.value;
-    if(diferente_tamaño!=undefined){
+    if (diferente_tamaño != undefined) {
       if (diferente_tamaño.checked) {
         div_elem.children[formaANúmero(seccion_forma.children[1].firstElementChild.value)].firstElementChild.value = cantidadInput.value;
         div_elem.children[formaANúmero(seccion_forma.children[1].firstElementChild.value)].firstElementChild.innerHTML = cantidadInput.value;
@@ -1287,6 +1379,7 @@ function tamañoSel(event) {
       }
     }
   }
+  forma=ingreso;
   switch (ingreso) {
     case "Redonda":
       tamaño1 = "Mini (5-6 personas)";
@@ -1294,15 +1387,18 @@ function tamañoSel(event) {
       tamaño3 = "Mediana (16 personas)";
       tamaño4 = "Grande (30 personas)";
       tamaño5 = "Extra grande (70 personas)";
+      tamaño=tamaño1;
       break;
     case "Cuadrada":
       tamaño1 = "Pequeña (20-25 personas)";
       tamaño2 = "Mediana (35-40 personas)";
       tamaño3 = "Grande (50 personas)";
+      tamaño=tamaño1;
       break;
     case "Rectangular":
       tamaño1 = "Mediana (35-40 personas)";
       tamaño2 = "Extra grande (100 personas)";
+      tamaño=tamaño1;
       break;
     default:
       tamaño1 = "Mini (2-4 personas)";
@@ -1310,6 +1406,7 @@ function tamañoSel(event) {
       tamaño3 = "Mediana (12-14 personas)";
       tamaño4 = "Grande (26-28 personas)";
       tamaño5 = "Extra grande (66-68 personas)";
+      tamaño=tamaño1;
   }
   contenido_opciones_tamaño = `
   <option value="`+ tamaño1 + `">` + tamaño1 + `</option>
@@ -1326,7 +1423,7 @@ function tamañoSel(event) {
       `;
     }
   }
-  if(diferente_tipo!=undefined){
+  if (diferente_tipo != undefined) {
     actualizarDesdeTipo();
   }
   if (typeof event != "string" || (misma_forma.checked == true && mismo_tamaño.checked == true)) {
@@ -1334,6 +1431,7 @@ function tamañoSel(event) {
   } else {
     return contenido_opciones_tamaño;
   }
+  CambiarPrecio();
 }
 function resetearDivElem() {
   div_elem.innerHTML = `
@@ -1345,22 +1443,23 @@ function resetearDivElem() {
 }
 function resetearSelectSabor() {
   select_sabor.innerHTML = `
-    <option value="Naranja">Naranja</option>
-    <option value="Chocolate">Chocolate</option>
-    <option value="Naranja y chocolate (Marmoleada)">Naranja y chocolate (Marmoleada)</option>
+    <option value="Fresa" style="display:none">Fresa</option>
+    <option value="Limón" style="display:none">Limón</option>
+    <option value="Uva" style="display:none">Uva</option>
+    <option value="Manzana" style="display:none">Manzana</option>
+    <option value="Naranja" selected>Naranja</option>
     <option value="Vainilla">Vainilla</option>
+    <option value="Chocolate">Chocolate</option>
     <option value="Maracuyá">Maracuyá</option>
-    <option value="6" style="display:none">6</option>
+    <option value="Naranja y chocolate (Marmoleada)">Naranja y chocolate (Marmoleada)</option>
   `;
 }
 function resetearSelectRelleno() {
   select_relleno.innerHTML = `
-    <option value="Mermelada de frutilla">Mermelada de frutilla</option>
-    <option value="Mermelada de mora">Mermelada de mora</option>
+    <option value="Mermelada de frutilla y mora">Mermelada de frutilla y mora</option>
     <option value="Glass de frutilla con crema">Glass de frutilla con crema</option>
     <option value="Crema napolitana">Crema napolitana</option>
     <option value="Durazno con crema">Durazno con crema</option>
-    <option value="Manjar">Manjar</option>
     <option value="Ninguno">Ninguno</option>
   `;
 }
@@ -1396,7 +1495,7 @@ function diferenteTamaño(mismo_tamaño, seleccionables) {
 function ingresoDiferentesTamaños(elem, mismo_tamaño_aux, seleccionables) {
   for (let i = 0; i < seleccionables.length; i++) {
     if (seleccionables[i].value != 0) {
-      let limite=seleccionables[i].value;
+      let limite = seleccionables[i].value;
       for (let j = 1; j <= limite; j++) {
         if (mismo_tamaño_aux == true) {
           j = "";
@@ -1429,7 +1528,7 @@ function sumaPastelesDiferentes(seleccionables) {
   return suma_formas;
 }
 function removerDropsAdicionales() {
-  while(event.target.parentElement.parentElement.nextElementSibling.id!="espAdicional"){
+  while (event.target.parentElement.parentElement.nextElementSibling.id != "espAdicional") {
     event.target.parentElement.parentElement.nextElementSibling.remove();
   }
 }
@@ -1525,11 +1624,11 @@ function mostrar_mismo_sabor_difTipo(difForma) {
       }
     }
     for (let k = 0; k < arregloSinRepetidos.length; k++) {
-      if (arregloSinRepetidos[k].includes("Normal")|| arregloSinRepetidos[k] == "Especial (Con frutos secos)") {
+      if (arregloSinRepetidos[k].includes("Normal") || arregloSinRepetidos[k] == "Especial (Con frutos secos)") {
         k_aux = k;
       }
       if (k + 1 < arregloSinRepetidos.length) {
-        if (arregloSinRepetidos[k + 1].includes("Normal")|| arregloSinRepetidos[k + 1] == "Especial (Con frutos secos)") {
+        if (arregloSinRepetidos[k + 1].includes("Normal") || arregloSinRepetidos[k + 1] == "Especial (Con frutos secos)") {
           if (k_aux != -1) {
             arregloSinRepetidos.splice(k + 1, 1);
             arregloSinRepetidos[k_aux] = "Normal y Especial (Con frutos secos)";
@@ -1808,7 +1907,7 @@ function mostrar_diferente_relleno_mismTipo(difForma) {
         </tr>
       `);
         }
-      }else{
+      } else {
         for (let i = 0; i < seleccionables.length; i++) {
           if (seleccionables[i].value != 0) {
             for (let j = 1; j <= seleccionables[i].value; j++) {
@@ -1824,7 +1923,7 @@ function mostrar_diferente_relleno_mismTipo(difForma) {
           }
         }
       }
-      
+
     } else {
       div_elem.children[formaANúmero(seccion_forma.children[1].firstElementChild.value)].firstElementChild.value = cantidadInput.value;
       div_elem.children[formaANúmero(seccion_forma.children[1].firstElementChild.value)].firstElementChild.innerHTML = cantidadInput.value;
@@ -1994,16 +2093,16 @@ function actualizarDesdeTipo() {
       mostrar_diferente_sabor_mismTipo(diferente_forma.checked);
     }
   }
-  if(misma_cobertura.checked){
+  if (misma_cobertura.checked) {
     mostrar_misma_cobertura();
-  }else{
+  } else {
     mostrar_diferente_cobertura();
   }
 }
-function diferenteCobertura( seleccionables){
+function diferenteCobertura(seleccionables) {
   let select, nombrePasteles, final, referencia;
-    referencia = pregunta_misma_cobertura;
-    final = "pregunta_mismo_relleno";
+  referencia = pregunta_misma_cobertura;
+  final = "pregunta_mismo_relleno";
 
   while (referencia.nextElementSibling.id != final) {
     referencia.nextElementSibling.remove();
@@ -2020,16 +2119,16 @@ function diferenteCobertura( seleccionables){
   } else {
     elem = pregunta_mismo_relleno;
     for (let i = 0; i < seleccionables.length; i++) {
-    if (seleccionables[i].value != 0) {
-      for (let j = 1; j <= seleccionables[i].value; j++) {
+      if (seleccionables[i].value != 0) {
+        for (let j = 1; j <= seleccionables[i].value; j++) {
           select = `<select onchange="opcionSel(event)" name="cobertura">
                       <option value="Crema">Crema</option>
                       <option value="Fondant">Fondant</option>
                       <option value="Ninguna">Ninguna</option>
                   </select>`;
           nombrePasteles = nombrePastelSegúnNro(i, false, false).replace("Tamaño", "Cobertura");
-    
-        elem.insertAdjacentHTML("beforebegin", `
+
+          elem.insertAdjacentHTML("beforebegin", `
         <tr>
           <th>`+ nombrePasteles + j + `</th>
           <td>
@@ -2037,12 +2136,12 @@ function diferenteCobertura( seleccionables){
           </td>
         </tr>
       `);
+        }
       }
     }
   }
-  }
 }
-function mostrar_diferente_cobertura(){
+function mostrar_diferente_cobertura() {
   if (misma_forma.checked) {
     div_elem.children[formaANúmero(seccion_forma.children[1].firstElementChild.value)].firstElementChild.value = cantidadInput.value;
     div_elem.children[formaANúmero(seccion_forma.children[1].firstElementChild.value)].firstElementChild.innerHTML = cantidadInput.value;
@@ -2052,13 +2151,13 @@ function mostrar_diferente_cobertura(){
     diferenteCobertura(seleccionables);
   }
 }
-function mostrar_misma_cobertura(){
-  while(pregunta_misma_cobertura.nextElementSibling.id!="pregunta_mismo_relleno"){
+function mostrar_misma_cobertura() {
+  while (pregunta_misma_cobertura.nextElementSibling.id != "pregunta_mismo_relleno") {
     pregunta_misma_cobertura.nextElementSibling.remove();
   }
-  pregunta_misma_cobertura.insertAdjacentHTML("afterend",contenido_seccion_cobertura());
+  pregunta_misma_cobertura.insertAdjacentHTML("afterend", contenido_seccion_cobertura());
 }
-function añadirDropAdd(){
+function añadirDropAdd() {
   numImgEspAdic++;
   cantidadInput2 = document.getElementsByClassName("cantidad")[1];
   cantidadInput2.value = parseInt(cantidadInput2.value) + 1;
@@ -2066,26 +2165,26 @@ function añadirDropAdd(){
   espAdicional3 = document.getElementById("espAdicional3");
   txtespAdicional.setAttribute("rowspan", 3);
   espAdicional3.removeAttribute("style");
-  tdEspAdd=espAdicional3.firstElementChild;
-    tdEspAdd.insertAdjacentHTML("beforeend",`
-    <div class="dropzone dropAdd" id="formDrop`+numImgEspAdic+`">
+  tdEspAdd = espAdicional3.firstElementChild;
+  tdEspAdd.insertAdjacentHTML("beforeend", `
+    <div class="dropzone dropAdd" id="formDrop`+ numImgEspAdic + `">
       <input type="url" placeholder="Ingresar enlace" name="ingreso_enlace" class="para_enlace enlaceAdd"
         onclick="quitarPlaceHolder(event)">
       <input type="hidden" name="enlace" class="aux_IngresarEnlace">
     </div>
     `);
-    enlaceAdd=document.getElementsByClassName("enlaceAdd")[numImgEspAdic-3];
-    formDropAdd = configurarDropZone(enlaceAdd, "DibujoImgEspecial");
-    dropzoneAdd = new Dropzone("div#formDrop"+numImgEspAdic, formDropAdd);
-    enlaceAdd.addEventListener('input', () => {
-      validaciónIngresoEnlace(enlaceAdd, dropzoneAdd);
-    });
+  enlaceAdd = document.getElementsByClassName("enlaceAdd")[numImgEspAdic - 3];
+  formDropAdd = configurarDropZone(enlaceAdd, "DibujoImgEspecial");
+  dropzoneAdd = new Dropzone("div#formDrop" + numImgEspAdic, formDropAdd);
+  enlaceAdd.addEventListener('input', () => {
+    validaciónIngresoEnlace(enlaceAdd, dropzoneAdd);
+  });
 }
-function quitarDropAdd(){
+function quitarDropAdd() {
   cantidadInput2 = document.getElementsByClassName("cantidad")[1];
-  if(parseInt(cantidadInput2.value)>0){
+  if (parseInt(cantidadInput2.value) > 0) {
     numImgEspAdic--;
     cantidadInput2.value = parseInt(cantidadInput2.value) - 1;
     tdEspAdd.lastElementChild.remove();
-  } 
+  }
 }
